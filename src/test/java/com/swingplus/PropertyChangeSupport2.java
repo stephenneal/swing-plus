@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import com.google.common.base.Objects;
 
 /**
- * Extends {@link PropertyChangeSupport} to prevent firing of events whenever properties are both {@code null}.
+ * Extends {@link PropertyChangeSupport} to prevent firing of events whenever property values are both {@code null}.
  * 
  * @author Stephen Neal
  */
