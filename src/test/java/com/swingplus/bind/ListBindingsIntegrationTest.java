@@ -4,9 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -24,10 +27,6 @@ import org.jdesktop.swingbinding.JComboBoxBinding;
 import org.jdesktop.swingbinding.JTableBinding;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.collect.Lists;
-
 public class ListBindingsIntegrationTest {
 
     private final Logger logger = Logger.getLogger(getClass());
@@ -44,7 +43,7 @@ public class ListBindingsIntegrationTest {
         final TestBean bean = TestBean.newInstance();
         final JComboBox comboBox = new JComboBox();
         // The bean list must be set prior to binding for it to be bound to the list instance
-        List<String> l = Lists.newArrayList();
+        List<String> l = new ArrayList<String>();
         final String value1 = "value1";
         l.add(value1);
         final ObservableList<String> list = ObservableCollections.observableList(l);
@@ -174,7 +173,7 @@ public class ListBindingsIntegrationTest {
         // Setup
         final JTable table = new JTable();
         // The bean list must be set prior to binding for it to be bound to the list instance
-        final List<TestBean> l = Lists.newArrayList();
+        final List<TestBean> l = new ArrayList<TestBean>();
         final TestBean bean = TestBean.newInstance();
         final Date date = Calendar.getInstance().getTime();
         for (int i = 0; i < 3; i++) {
@@ -188,11 +187,11 @@ public class ListBindingsIntegrationTest {
         bean.setTestBeans(list);
 
         // Bind
-        Builder<String, String> builder = ImmutableMap.builder();
-        builder.put("string", "String");
-        builder.put("duble", "Double");
-        builder.put("date", "Date");
-        JTableBinding<Object, TestBean, JTable> binding = ListBindings.model(bean, "testBeans", table, builder.build());
+        Map<String, String> map = new LinkedHashMap<String, String>();
+        map.put("string", "String");
+        map.put("duble", "Double");
+        map.put("date", "Date");
+        JTableBinding<Object, TestBean, JTable> binding = ListBindings.model(bean, "testBeans", table, map);
         binding.bind();
 
         // Test
@@ -332,7 +331,7 @@ public class ListBindingsIntegrationTest {
         final JTable table = new JTable();
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         // The bean list must be set prior to binding for it to be bound to the list instance
-        final List<TestBean> l = Lists.newArrayList();
+        final List<TestBean> l = new ArrayList<TestBean>();
         final TestBean bean = TestBean.newInstance();
         final Date date = Calendar.getInstance().getTime();
         for (int i = 0; i < 3; i++) {
@@ -345,17 +344,16 @@ public class ListBindingsIntegrationTest {
         final ObservableList<TestBean> list = ObservableCollections.observableList(l);
         bean.setTestBeans(list);
 
-        final List<TestBean> s = Lists.newArrayList();
+        final List<TestBean> s = new ArrayList<TestBean>();
         final ObservableList<TestBean> selected = ObservableCollections.observableList(s);
         bean.setTestBeansSelected(selected);
 
         // Bind
-        Builder<String, String> builder = ImmutableMap.builder();
-        builder.put("string", "String");
-        builder.put("duble", "Double");
-        builder.put("date", "Date");
-        JTableBinding<Object, TestBean, JTable> listBinding = ListBindings.model(bean, "testBeans", table,
-                        builder.build());
+        Map<String, String> map = new LinkedHashMap<String, String>();
+        map.put("string", "String");
+        map.put("duble", "Double");
+        map.put("date", "Date");
+        JTableBinding<Object, TestBean, JTable> listBinding = ListBindings.model(bean, "testBeans", table, map);
         listBinding.bind();
         Binding<Object, List<TestBean>, TestBean, List<TestBean>> selectionBinding = ListBindings.selection(bean,
                         "testBeansSelected", table);
@@ -433,7 +431,7 @@ public class ListBindingsIntegrationTest {
         final JTable table = new JTable();
         table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         // The bean list must be set prior to binding for it to be bound to the list instance
-        final List<TestBean> l = Lists.newArrayList();
+        final List<TestBean> l = new ArrayList<TestBean>();
         final TestBean bean = TestBean.newInstance();
         final Date date = Calendar.getInstance().getTime();
         for (int i = 0; i < 3; i++) {
@@ -446,17 +444,16 @@ public class ListBindingsIntegrationTest {
         final ObservableList<TestBean> list = ObservableCollections.observableList(l);
         bean.setTestBeans(list);
 
-        final List<TestBean> s = Lists.newArrayList();
+        final List<TestBean> s = new ArrayList<TestBean>();
         final ObservableList<TestBean> selected = ObservableCollections.observableList(s);
         bean.setTestBeansSelected(selected);
 
         // Bind
-        Builder<String, String> builder = ImmutableMap.builder();
-        builder.put("string", "String");
-        builder.put("duble", "Double");
-        builder.put("date", "Date");
-        JTableBinding<Object, TestBean, JTable> listBinding = ListBindings.model(bean, "testBeans", table,
-                        builder.build());
+        Map<String, String> map = new LinkedHashMap<String, String>();
+        map.put("string", "String");
+        map.put("duble", "Double");
+        map.put("date", "Date");
+        JTableBinding<Object, TestBean, JTable> listBinding = ListBindings.model(bean, "testBeans", table, map);
         listBinding.bind();
         Binding<Object, List<TestBean>, TestBean, List<TestBean>> selectionBinding = ListBindings.selection(bean,
                         "testBeansSelected", table);

@@ -8,8 +8,11 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,11 +31,6 @@ import org.jdesktop.observablecollections.ObservableList;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.util.ReflectionUtils;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * Integration tests for {@link Binder}.
@@ -248,7 +246,7 @@ public class BinderIntegrationTest {
         // Setup
         final JComboBox comboBox = new JComboBox();
         // The bean list must be set prior to binding for it to be bound to the list instance
-        List<String> l = Lists.newArrayList();
+        List<String> l = new ArrayList<String>();
         final String value1 = "value1";
         l.add(value1);
         final ObservableList<String> list = ObservableCollections.observableList(l);
@@ -333,7 +331,7 @@ public class BinderIntegrationTest {
     public void testBindJTable() throws InterruptedException, InvocationTargetException {
         // Setup
         final JTable table = new JTable();
-        List<TestBean> l = Lists.newArrayList();
+        List<TestBean> l = new ArrayList<TestBean>();
         final Date date = Calendar.getInstance().getTime();
         for (int i = 0; i < 3; i++) {
             final TestBean b = TestBean.newInstance();
@@ -346,16 +344,16 @@ public class BinderIntegrationTest {
         // The bean list must be set prior to binding for it to be bound to the list instance (actually this might not
         // be true for tables)
         this.binder.getBean().setTestBeans(list);
-        List<TestBean> s = Lists.newArrayList();
+        List<TestBean> s = new ArrayList<TestBean>();
         final ObservableList<TestBean> selected = ObservableCollections.observableList(s);
         this.binder.getBean().setTestBeansSelected(selected);
 
         // Bind
-        Builder<String, String> builder = ImmutableMap.builder();
-        builder.put("string", "String");
-        builder.put("duble", "Double");
-        builder.put("date", "Date");
-        this.binder.bindJTable(table, "testBeans", builder.build());
+        Map<String, String> map = new LinkedHashMap<String, String>();
+        map.put("string", "String");
+        map.put("duble", "Double");
+        map.put("date", "Date");
+        this.binder.bindJTable(table, "testBeans", map);
 
         // Test
         SwingUtilities.invokeAndWait(new Runnable() {
@@ -541,7 +539,7 @@ public class BinderIntegrationTest {
         bindingCount++;
         this.binder.bindJComboBox(new JComboBox(), "stringList");
         bindingCount += 2;
-        Map<String, String> columnMap = Maps.newHashMap();
+        Map<String, String> columnMap = new HashMap<String, String>();
         this.binder.bindJTable(new JTable(), "testBeans", columnMap);
         bindingCount += 2;
 

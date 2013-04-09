@@ -3,7 +3,7 @@ package com.swingplus.bind;
 import org.apache.commons.lang.StringUtils;
 import org.jdesktop.beansbinding.Converter;
 
-public class BindConverters {
+class BindConverters {
 
     /**
      * Convert a {@code Double} value to a {@code String}.

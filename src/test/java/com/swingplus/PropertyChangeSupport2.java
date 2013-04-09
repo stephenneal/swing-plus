@@ -3,9 +3,8 @@ package com.swingplus;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.log4j.Logger;
-
-import com.google.common.base.Objects;
 
 /**
  * Extends {@link PropertyChangeSupport} to prevent firing of events whenever property values are both {@code null}.
@@ -26,7 +25,7 @@ public class PropertyChangeSupport2 extends PropertyChangeSupport {
      */
     @Override
     public void firePropertyChange(PropertyChangeEvent evt) {
-        if (!Objects.equal(evt.getOldValue(), evt.getNewValue())) {
+        if (!ObjectUtils.equals(evt.getOldValue(), evt.getNewValue())) {
             LOGGER.info("firePropertyChange: source = " + getSimpleClassName(evt.getSource()) + "; name = "
                             + evt.getPropertyName() + "; oldValue = " + evt.getOldValue() + "; newValue = "
                             + evt.getNewValue());

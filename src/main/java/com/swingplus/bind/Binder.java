@@ -1,5 +1,6 @@
 package com.swingplus.bind;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,8 +11,6 @@ import javax.swing.text.JTextComponent;
 
 import org.jdesktop.beansbinding.Binding;
 import org.jdesktop.beansbinding.Converter;
-
-import com.google.common.collect.Lists;
 
 /**
  * Simple API for binding operations. Binding operations are used to bind view components values, state etc to its
@@ -35,7 +34,7 @@ public class Binder<B> {
 
     private B bean;
 
-    private List<Binding<?, ?, ?, ?>> bindings = Lists.newArrayList();
+    private List<Binding<?, ?, ?, ?>> bindings = new ArrayList<Binding<?, ?, ?, ?>>();
     private boolean released = false;
 
     public Binder(B bean) {
