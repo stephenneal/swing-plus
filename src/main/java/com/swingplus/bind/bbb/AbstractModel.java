@@ -1,5 +1,6 @@
 package com.swingplus.bind.bbb;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -8,6 +9,13 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 import com.swingplus.PropertyChangeSupport2;
 
+/**
+ * Model classes to be used in binding can extend this to get {@link PropertyChangeSupport} for compatibility with
+ * BetterBeansBinding. Implementing classes must be sure to fire {@link PropertyChangeEvent}'s in setter's.
+ * 
+ * @author Stephen Neal
+ * @since 10/04/2013
+ */
 public class AbstractModel {
 
     public static AbstractModel newInstance() {
@@ -27,7 +35,7 @@ public class AbstractModel {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE, false);
     }
 
-    // PropertyChangeSupport delegate methods
+    // PropertyChangeSupport delegate methods required for compatibility with BetterBeansBinding
     // -----------------------------------------------------------------------------------------------------------------
 
     public PropertyChangeSupport getPropertyChangeSupport() {

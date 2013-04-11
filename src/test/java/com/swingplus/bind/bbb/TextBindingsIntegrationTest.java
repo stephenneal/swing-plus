@@ -8,7 +8,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.text.JTextComponent;
 
 import org.jdesktop.beansbinding.Binding;
 import org.junit.Test;
@@ -28,8 +27,8 @@ import com.swingplus.bind.TestBean;
 public class TextBindingsIntegrationTest {
 
     /**
-     * Test for {@link TextBindings#text(Object, Class, String, JTextComponent)} bound to a {@link String}. Verifies
-     * binding updates correctly in both directions.
+     * Test {@link TextBindings#text(Object, String, JComponent)} for a {@link JTextField} and property of type
+     * {@link String}.
      * 
      * @throws InvocationTargetException
      * @throws InterruptedException
@@ -89,8 +88,8 @@ public class TextBindingsIntegrationTest {
     }
 
     /**
-     * Test for {@link TextBindings#text(Object, Class, String, JTextComponent)} bound to an {@link Integer}. Verifies
-     * binding updates correctly in both directions.
+     * Test {@link TextBindings#text(Object, String, JComponent)} for a {@link JTextField} and property of type
+     * {@link Integer}.
      * 
      * @throws InvocationTargetException
      * @throws InterruptedException
@@ -150,14 +149,11 @@ public class TextBindingsIntegrationTest {
     }
 
     /**
-     * Test for {@link TextBindings#text(Object, Class, String, JLabel)} bound to a {@link String}. Verifies binding
-     * updates correctly.
-     * 
-     * @throws InvocationTargetException
-     * @throws InterruptedException
+     * Test {@link TextBindings#text(Object, String, JComponent)} for a {@link JLabel} and property of type
+     * {@link String}.
      */
     @Test
-    public void testTextJLabelString() throws InterruptedException, InvocationTargetException {
+    public void testBindTextJLabelToString() throws InterruptedException, InvocationTargetException {
         // Setup
         final TestBean bean = TestBean.newInstance();
         final JLabel label = new JLabel();
@@ -176,31 +172,40 @@ public class TextBindingsIntegrationTest {
         });
 
         // Update the bean value
-        final String value = "value";
+        final String value = "some value";
         bean.setString(value);
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                assertEquals(value, label.getText());
+                assertEquals(value.toString(), label.getText());
             }
         });
-        // Set the label text to null
+        // Set the label to null (binding is read only so bean should not be updated)
         label.setText(null);
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                assertEquals(null, bean.getString());
-            }
-        });
-        // Update the text field with a value
-        label.setText(value);
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
                 assertEquals(value, bean.getString());
             }
         });
-        // Clear the bean value
+        // Set the same value on the bean property, the label will not be updated (same value means no property change)
+        bean.setString(value);
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(null, label.getText());
+            }
+        });
+        // Set a new value on the bean property
+        final String newValue = "some new value";
+        bean.setString(newValue);
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(newValue.toString(), label.getText());
+            }
+        });
+        // Set the bean value to null
         bean.setString(null);
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
@@ -208,35 +213,40 @@ public class TextBindingsIntegrationTest {
                 assertEquals(null, label.getText());
             }
         });
-        // Set the label text to an empty String
+        // Update the label with a value (binding is read only so bean should not be updated)
+        label.setText(value.toString());
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(null, bean.getString());
+            }
+        });
+        // Set the label to an empty string, bean property should be set to null
         label.setText("");
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                assertEquals("", bean.getString());
+                assertEquals(null, bean.getString());
             }
         });
     }
 
     /**
-     * Test for {@link TextBindings#text(Object, Class, String, JLabel)} bound to an {@link Integer}. Verifies binding
-     * updates correctly.
-     * 
-     * @throws InvocationTargetException
-     * @throws InterruptedException
+     * Test {@link TextBindings#text(Object, String, JComponent)} for a {@link JLabel} and property of type
+     * {@link Integer}.
      */
     @Test
-    public void testTextJLabelInteger() throws InterruptedException, InvocationTargetException {
+    public void testBindTextJLabelToInteger() throws InterruptedException, InvocationTargetException {
         // Setup
         final TestBean bean = TestBean.newInstance();
         final JLabel label = new JLabel();
 
         // Bind
-        Binding<TestBean, String, JComponent, String> binding = TextBindings.text(bean, "string", label);
+        Binding<TestBean, Integer, JComponent, String> binding = TextBindings.text(bean, "integr", label);
         binding.bind();
 
         // Test
-        assertEquals(null, bean.getString());
+        assertEquals(null, bean.getIntegr());
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
@@ -245,46 +255,62 @@ public class TextBindingsIntegrationTest {
         });
 
         // Update the bean value
-        final String value = "value";
-        bean.setString(value);
+        final Integer value = Integer.valueOf(2);
+        bean.setIntegr(value);
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                assertEquals(value, label.getText());
+                assertEquals(value.toString(), label.getText());
             }
         });
-        // Set the label text to null
+        // Set the label to null (binding is read only so bean should not be updated)
         label.setText(null);
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                assertEquals(null, bean.getString());
+                assertEquals(value, bean.getIntegr());
             }
         });
-        // Update the text field with a value
-        label.setText(value);
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                assertEquals(value, bean.getString());
-            }
-        });
-        // Clear the bean value
-        bean.setString(null);
+        // Set the same value on the bean property, the label will not be updated (same value means no property change)
+        bean.setIntegr(value);
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
                 assertEquals(null, label.getText());
             }
         });
-        // Set the label text to an empty String
+        // Set a new value on the bean property
+        final Integer newValue = Integer.valueOf(10);
+        bean.setIntegr(newValue);
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(newValue.toString(), label.getText());
+            }
+        });
+        // Set the bean value to null
+        bean.setIntegr(null);
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(null, label.getText());
+            }
+        });
+        // Update the label with a value (binding is read only so bean should not be updated)
+        label.setText(value.toString());
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(null, bean.getIntegr());
+            }
+        });
+        // Set the label to an empty string, bean property should be set to null
         label.setText("");
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                assertEquals("", bean.getString());
+                assertEquals(null, bean.getIntegr());
             }
         });
     }
-
 }

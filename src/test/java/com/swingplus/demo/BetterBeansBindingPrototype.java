@@ -1,6 +1,7 @@
 package com.swingplus.demo;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Calendar;
@@ -46,6 +47,9 @@ public class BetterBeansBindingPrototype extends JPanel {
 
     private static BetterBeansBindingPrototype createPrototype() {
         BindingPrototypeModel model = BindingPrototypeModel.newInstance();
+        model.setField1Label("Field 1");
+        model.setField2Label("Field 2");
+        model.setField3Label("Field 3");
         model.setString("Some value");
         model.setDuble(new Double(20.00));
         model.setDate(Calendar.getInstance().getTime());
@@ -65,23 +69,29 @@ public class BetterBeansBindingPrototype extends JPanel {
     private JLabel text3Output;
 
     public BetterBeansBindingPrototype(BindingPrototypeModel model) {
-        this.text1Label = new JLabel("Text 1");
+        this.text1Label = new JLabel();
         this.text1 = new JTextField();
-        this.text2Label = new JLabel("Text 2");
+        this.text2Label = new JLabel();
         this.text2 = new JTextField();
-        this.text3Label = new JLabel("Text 3");
+        this.text3Label = new JLabel();
         this.text3 = new JTextField();
 
         this.text1Output = new JLabel();
+        this.text1Output.setMinimumSize(new Dimension(25, this.text1Output.getHeight()));
         this.text2Output = new JLabel();
+        this.text1Output.setMinimumSize(new Dimension(25, this.text2Output.getHeight()));
         this.text3Output = new JLabel();
+        this.text1Output.setMinimumSize(new Dimension(25, this.text3Output.getHeight()));
 
         this.binder = new Binder<BindingPrototypeModel>(model);
+        this.binder.bindText(this.text1Label, "field1Label");
+        this.binder.bindText(this.text2Label, "field2Label");
+        this.binder.bindText(this.text3Label, "field3Label");
         this.binder.bindText(this.text1, "string");
-        this.binder.bindText(this.text1Output, "string");
         this.binder.bindText(this.text2, "duble");
-        this.binder.bindText(this.text2Output, "duble");
         this.binder.bindText(this.text3, "date");
+        this.binder.bindText(this.text1Output, "string");
+        this.binder.bindText(this.text2Output, "duble");
         this.binder.bindText(this.text3Output, "date");
 
         layoutComponentsBox(this);
@@ -91,6 +101,7 @@ public class BetterBeansBindingPrototype extends JPanel {
         this.binder.release();
     }
 
+    // Lay the components out in a box. NB. Preferred Swing layouts include MigLayout and JGoodies FormLayout.
     private void layoutComponentsBox(JPanel panel) {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(createHBox(this.text1Label, this.text1, this.text1Output));
@@ -118,6 +129,10 @@ public class BetterBeansBindingPrototype extends JPanel {
             return bean;
         }
 
+        private String field1Label;
+        private String field2Label;
+        private String field3Label;
+
         private Date date;
         private Double duble;
         private ObservableList<String> stringList;
@@ -127,6 +142,36 @@ public class BetterBeansBindingPrototype extends JPanel {
 
         private BindingPrototypeModel() {
             super();
+        }
+
+        public String getField1Label() {
+            return this.field1Label;
+        }
+
+        public void setField1Label(String newValue) {
+            String oldValue = this.field1Label;
+            this.field1Label = newValue;
+            getPropertyChangeSupport().firePropertyChange("field1Label", oldValue, newValue);
+        }
+
+        public String getField2Label() {
+            return this.field2Label;
+        }
+
+        public void setField2Label(String newValue) {
+            String oldValue = this.field2Label;
+            this.field2Label = newValue;
+            getPropertyChangeSupport().firePropertyChange("field2Label", oldValue, newValue);
+        }
+
+        public String getField3Label() {
+            return this.field3Label;
+        }
+
+        public void setField3Label(String newValue) {
+            String oldValue = this.field3Label;
+            this.field3Label = newValue;
+            getPropertyChangeSupport().firePropertyChange("field3Label", oldValue, newValue);
         }
 
         public Date getDate() {

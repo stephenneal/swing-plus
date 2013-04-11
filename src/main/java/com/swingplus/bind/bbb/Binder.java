@@ -63,7 +63,7 @@ public class Binder<B> extends AbstractBinder<B> {
     public void bindText(final JTextComponent component, String fieldName) {
         B bean = getBean();
         Binding<B, ?, JComponent, String> binding = TextBindings.text(bean, fieldName, component);
-        bindAndRegister(binding);
+        bindAndManage(binding);
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -87,7 +87,7 @@ public class Binder<B> extends AbstractBinder<B> {
      * @param fieldName name of the field on the underlying bean
      */
     public void bindText(JLabel label, String fieldName) {
-        bindAndRegister(TextBindings.text(getBean(), fieldName, label));
+        bindAndManage(TextBindings.text(getBean(), fieldName, label));
     }
 
     /**
@@ -99,8 +99,8 @@ public class Binder<B> extends AbstractBinder<B> {
      * @param fieldName name used for binding
      */
     public void bindJComboBox(JComboBox component, String fieldName) {
-        bindAndRegister(ListBindings.model(getBean(), fieldName + "List", component));
-        bindAndRegister(ListBindings.selection(getBean(), fieldName, component));
+        bindAndManage(ListBindings.model(getBean(), fieldName + "List", component));
+        bindAndManage(ListBindings.selection(getBean(), fieldName, component));
     }
 
     /**
@@ -113,41 +113,8 @@ public class Binder<B> extends AbstractBinder<B> {
      * @param columnMap map of the bean field names (keys) to column names (values)
      */
     public void bindJTable(JTable component, String fieldName, Map<String, String> columnMap) {
-        bindAndRegister(ListBindings.model(getBean(), fieldName, component, columnMap));
-        bindAndRegister(ListBindings.selection(getBean(), fieldName + "Selected", component));
+        bindAndManage(ListBindings.model(getBean(), fieldName, component, columnMap));
+        bindAndManage(ListBindings.selection(getBean(), fieldName + "Selected", component));
     }
 
-    // Private
-    // -----------------------------------------------------------------------------------------------------------------
-
-    // private static class MyConverter<S, T> extends Converter<S, T> {
-    //
-    // @Override
-    // public T convertForward(S value) {
-    // Converter.defaultConvert(value);
-    // return null;
-    // }
-    //
-    // @Override
-    // public S convertReverse(T value) {
-    // return null;
-    // }
-    //
-    // }
-    // @SuppressWarnings("unchecked")
-    // private static <S, T> Converter<S, T> converter(Class<S> source, Class<T> target) {
-    // if (source.equals(target)) {
-    // // Converter not required!
-    // return null;
-    // }
-    // if (target == String.class) {
-    // if (source == Double.class) {
-    // return (Converter<S, T>) BindConverters.newDoubleString();
-    // }
-    // if (source == Integer.class) {
-    // return (Converter<S, T>) BindConverters.newIntegerString();
-    // }
-    // }
-    // throw new RuntimeException("conversion not supported, implement the converter required");
-    // }
 }

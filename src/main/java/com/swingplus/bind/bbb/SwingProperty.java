@@ -90,20 +90,26 @@ class SwingProperty<S, V> extends Property<S, V> {
         return this.beanProperty.getWriteType(source);
     }
 
+    /**
+     * Overrides the default implementation to modify behaviour for binding a "text" property of a Swing component to a
+     * non-String, non-primitive bean property. This returns null when the value of the "text" property is an empty
+     * string and therefore the conversion step of the binding is skipped and the bean property is set to null. If empty
+     * string is returned the default BetterBeansBinding conversions fail on empty string and therefore the bean field
+     * is not updated, it retains its existing value which does not accurately reflect that the Swing component is
+     * empty.
+     * <p>
+     * If the target property is a String or primitive the value is returned as normal.
+     * </p>
+     * <p>
+     * NB. it may be preferable that this modification form part of the value conversion but this would mean the default
+     * conversions provided by BetterBeansBinding cannot be used (they are private to the package). That would result in
+     * having to reproduce all those converters and have a converter applied to every binding for a "text" property. For
+     * now this is deemed a much simpler solution.
+     * </p>
+     */
     @Override
     public V getValue(S source) {
         V value = this.beanProperty.getValue(source);
-        // Special handling for binding a "text" property of a Swing component to a non-String, non-primitive field
-        // to return null when the value of the "text" property is an empty string. The default BetterBeansBinding
-        // conversions fail on empty string and therefore the bean field is not updated. This change means the
-        // conversion is skipped and the bean field is set to null.
-        //
-        // If the target property is a String or primitive the value is returned as normal.
-        //
-        // NB. it is probably preferable that this logic form part of the conversion but this would mean the default
-        // conversions provided by BetterBeansBinding cannot be used (they cannot be accessed outside of the package).
-        // That would result in having to reproduce all those converters and a converter applied to every
-        // binding for a "text" property. For now this is deemed a much simpler solution.
         if ("text".equals(this.path) && source instanceof JComponent && !String.class.equals(this.targetType)
                         && this.targetType != null && !this.targetType.isPrimitive() && "".equals(value)) {
             return null;
@@ -111,14 +117,22 @@ class SwingProperty<S, V> extends Property<S, V> {
         return value;
     }
 
+    /**
+     * Overrides the default implementation to set the value in the EDT.
+     */
     @Override
     public void setValue(final S source, final V value) {
-        SwingUtilities.invokeLater(new Runnable() {
+        Runnable r = new Runnable() {
             @Override
             public void run() {
                 SwingProperty.this.beanProperty.setValue(source, value);
             }
-        });
+        };
+        if (SwingUtilities.isEventDispatchThread()) {
+            r.run();
+        } else {
+            SwingUtilities.invokeLater(r);
+        }
     }
 
     @Override

@@ -33,7 +33,7 @@ abstract class AbstractBinder<B> {
 
     private List<Binding<?, ?, ?, ?>> bindings = Collections.synchronizedList(new ArrayList<Binding<?, ?, ?, ?>>(50));
     private boolean released = false;
-    private final Object lock = new Object();;
+    private final Object lock = new Object();
 
     /**
      * Constructor requiring a bean (model).
@@ -84,7 +84,7 @@ abstract class AbstractBinder<B> {
     // Private
     // -----------------------------------------------------------------------------------------------------------------
 
-    protected final void bindAndRegister(Binding<?, ?, ?, ?> binding) {
+    protected final void bindAndManage(final Binding<?, ?, ?, ?> binding) {
         // Synchronise to prevent binding during or after release
         synchronized (this.lock) {
             if (this.released) {
@@ -94,5 +94,4 @@ abstract class AbstractBinder<B> {
         }
         binding.bind();
     }
-
 }
