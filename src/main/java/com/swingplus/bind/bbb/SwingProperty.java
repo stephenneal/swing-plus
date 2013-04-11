@@ -93,21 +93,19 @@ class SwingProperty<S, V> extends Property<S, V> {
     @Override
     public V getValue(S source) {
         V value = this.beanProperty.getValue(source);
-        // Special handling for binding a "text" property of a Swing component to a non-String field.
-        // If the target property is a String return the value as is, otherwise return null instead of empty string. The
-        // BetterBeansBinding default conversion (see org.jdesktop.beansbinding.Converter) for non-String types fails
-        // for an empty string (parsers cannot convert it to something meaningful) and therefore the target value is not
-        // updated (it retains any existing value which does not necessarily reflect the fact the component no longer
-        // has a value. By returning null in place of an empty string here the conversion is ignored and the target
-        // value is set to null.
+        // Special handling for binding a "text" property of a Swing component to a non-String, non-primitive field
+        // to return null when the value of the "text" property is an empty string. The default BetterBeansBinding
+        // conversions fail on empty string and therefore the bean field is not updated. This change means the
+        // conversion is skipped and the bean field is set to null.
         //
-        // NB. it is probably preferable that this logic be in the conversion. Unfortunately the default conversion
-        // provided by BetterBeansBinding cannot be re-used (cannot be accessed outside of the package). That would mean
-        // have to write our own version of all those converters plus include handling for an empty string (either by
-        // wrapping the converters in some way or putting it into each converter) and a converter applied to every
-        // JTextComponent binding. For now this is deemed a much simpler solution.
+        // If the target property is a String or primitive the value is returned as normal.
+        //
+        // NB. it is probably preferable that this logic form part of the conversion but this would mean the default
+        // conversions provided by BetterBeansBinding cannot be used (they cannot be accessed outside of the package).
+        // That would result in having to reproduce all those converters and a converter applied to every
+        // binding for a "text" property. For now this is deemed a much simpler solution.
         if ("text".equals(this.path) && source instanceof JComponent && !String.class.equals(this.targetType)
-                        && "".equals(value)) {
+                        && this.targetType != null && !this.targetType.isPrimitive() && "".equals(value)) {
             return null;
         }
         return value;
