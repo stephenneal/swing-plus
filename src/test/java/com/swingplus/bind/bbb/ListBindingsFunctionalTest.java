@@ -30,16 +30,15 @@ import org.junit.Test;
 import com.swingplus.bind.TestBean;
 
 /**
- * Tests for {@link ListBindings}.
+ * Tests the functionality of {@link ListBindings}.
  * <p>
- * This is considered and integration test because it does not test {@link ListBindings} in isolation, it tests real
- * bindings (which are provided by BetterBeans Binding).
+ * This does not test the class in isolation (as per a unit test), it tests with real bindings (BetterBeansBinding).
  * </p>
  * 
  * @author Stephen Neal
  * @since 29/07/2011
  */
-public class ListBindingsIntegrationTest {
+public class ListBindingsFunctionalTest {
 
     private final Logger logger = Logger.getLogger(getClass());
 
@@ -210,7 +209,7 @@ public class ListBindingsIntegrationTest {
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                ListBindingsIntegrationTest.this.logger.info("size = " + list.size());
+                ListBindingsFunctionalTest.this.logger.info("size = " + list.size());
                 assertEquals(list.size(), table.getModel().getRowCount());
                 for (int i = 0; i < list.size(); i++) {
                     TestBean entry = list.get(i);
@@ -235,7 +234,7 @@ public class ListBindingsIntegrationTest {
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                ListBindingsIntegrationTest.this.logger.info("size = " + list.size());
+                ListBindingsFunctionalTest.this.logger.info("size = " + list.size());
                 assertEquals(list.size(), table.getModel().getRowCount());
                 for (int i = 0; i < list.size(); i++) {
                     TestBean entry = list.get(i);
@@ -255,7 +254,7 @@ public class ListBindingsIntegrationTest {
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                ListBindingsIntegrationTest.this.logger.info("size = " + list.size());
+                ListBindingsFunctionalTest.this.logger.info("size = " + list.size());
                 assertEquals(list.size(), table.getModel().getRowCount());
                 for (int i = 0; i < list.size(); i++) {
                     TestBean entry = list.get(i);
@@ -276,13 +275,13 @@ public class ListBindingsIntegrationTest {
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                ListBindingsIntegrationTest.this.logger.info("size = " + list.size());
+                ListBindingsFunctionalTest.this.logger.info("size = " + list.size());
                 assertEquals(list.size(), table.getModel().getRowCount());
                 for (int i = 0; i < list.size(); i++) {
                     TestBean entry = list.get(i);
                     assertEquals(entry.getString(), table.getModel().getValueAt(i, 0));
                     assertEquals(entry.getString(), table.getValueAt(i, 0));
-                    ListBindingsIntegrationTest.this.logger.info("duble = " + entry.getDuble());
+                    ListBindingsFunctionalTest.this.logger.info("duble = " + entry.getDuble());
                     assertEquals(entry.getDuble(), table.getModel().getValueAt(i, 1));
                     assertEquals(entry.getDuble(), table.getValueAt(i, 1));
                     assertEquals(entry.getDate(), table.getModel().getValueAt(i, 2));
@@ -302,13 +301,13 @@ public class ListBindingsIntegrationTest {
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                ListBindingsIntegrationTest.this.logger.info("size = " + list.size());
+                ListBindingsFunctionalTest.this.logger.info("size = " + list.size());
                 assertEquals(list.size(), table.getModel().getRowCount());
                 for (int i = 0; i < list.size(); i++) {
                     TestBean entry = list.get(i);
                     assertEquals(entry.getString(), table.getModel().getValueAt(i, 0));
                     assertEquals(entry.getString(), table.getValueAt(i, 0));
-                    ListBindingsIntegrationTest.this.logger.info("duble = " + entry.getDuble());
+                    ListBindingsFunctionalTest.this.logger.info("duble = " + entry.getDuble());
                     assertEquals(entry.getDuble(), table.getModel().getValueAt(i, 1));
                     assertEquals(entry.getDuble(), table.getValueAt(i, 1));
                     assertEquals(entry.getDate(), table.getModel().getValueAt(i, 2));

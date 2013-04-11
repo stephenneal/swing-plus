@@ -1,16 +1,15 @@
 package com.swingplus.bind.bbb;
 
 /**
- * Tests for {@link DateBindings}.
+ * Tests the functionality of {@link DateBindings}.
  * <p>
- * This is considered and integration test because it does not test {@link AbstractBinder} in isolation, it tests real
- * bindings (which are provided by BetterBeans Binding).
+ * This does not test the class in isolation (as per a unit test), it tests with real bindings (BetterBeansBinding).
  * </p>
  * 
  * @author Stephen Neal
  * @since 18/07/2011
  */
-public class DateBindingsIntegrationTest {
+public class DateBindingsFunctionalTest {
 
     // /**
     // * Test for {@link DateBindings#date(Object, String, JDateChooser)}. Verifies binding updates correctly in both
