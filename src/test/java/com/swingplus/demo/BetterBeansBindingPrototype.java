@@ -7,8 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -62,6 +61,8 @@ public class BetterBeansBindingPrototype extends JPanel {
     private Binder<BindingPrototypeModel> binder;
 
     private JLabel text1Output;
+    private JLabel text2Output;
+    private JLabel text3Output;
 
     public BetterBeansBindingPrototype(BindingPrototypeModel model) {
         this.text1Label = new JLabel("Text 1");
@@ -72,12 +73,16 @@ public class BetterBeansBindingPrototype extends JPanel {
         this.text3 = new JTextField();
 
         this.text1Output = new JLabel();
+        this.text2Output = new JLabel();
+        this.text3Output = new JLabel();
 
         this.binder = new Binder<BindingPrototypeModel>(model);
         this.binder.bindText(this.text1, "string");
         this.binder.bindText(this.text1Output, "string");
         this.binder.bindText(this.text2, "duble");
+        this.binder.bindText(this.text2Output, "duble");
         this.binder.bindText(this.text3, "date");
+        this.binder.bindText(this.text3Output, "date");
 
         layoutComponentsBox(this);
     }
@@ -87,71 +92,24 @@ public class BetterBeansBindingPrototype extends JPanel {
     }
 
     private void layoutComponentsBox(JPanel panel) {
-        JPanel panel1 = new JPanel();
-        panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
-        panel1.add(this.text1Label);
-        panel1.add(this.text1);
-        panel1.add(this.text1Output);
-
-        JPanel panel2 = new JPanel();
-        panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
-        panel2.add(this.text2Label);
-        panel2.add(this.text2);
-
-        JPanel panel3 = new JPanel();
-        panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
-        panel3.add(this.text3Label);
-        panel3.add(this.text3);
-
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(panel1);
-        panel.add(panel2);
-        panel.add(panel3);
+        panel.add(createHBox(this.text1Label, this.text1, this.text1Output));
+        panel.add(createHBox(this.text2Label, this.text2, this.text2Output));
+        panel.add(createHBox(this.text3Label, this.text3, this.text3Output));
     }
 
-    private void layoutComponentsGroup(JPanel panel) {
-        GroupLayout layout = new GroupLayout(panel);
-        panel.setLayout(layout);
-
-        // Turn on automatically adding gaps between components
-        layout.setAutoCreateGaps(true);
-
-        // Turn on automatically creating gaps between components that touch
-        // the edge of the container and the container.
-        layout.setAutoCreateContainerGaps(true);
-
-        // Create a sequential group for the horizontal axis.
-        GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
-
-        // The sequential group in turn contains three parallel groups.
-        // The first parallel group contains the field labels, the second the text fields and the third the output.
-        // Putting the labels in a parallel group along the horizontal axis positions them at the same x location.
-        //
-        // Variable indentation is used to reinforce the level of grouping.
-        hGroup.addGroup(layout.createParallelGroup().addComponent(this.text1Label).addComponent(this.text2Label)
-                        .addComponent(this.text3Label));
-        hGroup.addGroup(layout.createParallelGroup().addComponent(this.text1).addComponent(this.text2)
-                        .addComponent(this.text3));
-        hGroup.addGroup(layout.createParallelGroup().addComponent(this.text1Output));
-        layout.setHorizontalGroup(hGroup);
-
-        // Create a sequential group for the vertical axis.
-        GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
-
-        // The sequential group contains two parallel groups that align
-        // the contents along the baseline. The first parallel group contains
-        // the first label and text field, and the second parallel group contains
-        // the second label and text field. By using a sequential group
-        // the labels and text fields are positioned vertically after one another.
-        vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).addComponent(this.text1Label)
-                        .addComponent(this.text1).addComponent(this.text1Output));
-        vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).addComponent(this.text2Label)
-                        .addComponent(this.text2));
-        vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).addComponent(this.text3Label)
-                        .addComponent(this.text3));
-        layout.setVerticalGroup(vGroup);
+    private static JPanel createHBox(JComponent... components) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        for (JComponent c : components) {
+            panel.add(c);
+        }
+        return panel;
     }
 
+    /**
+     * Model for this prototype, must be public for BetterBeansBinding to work
+     */
     public static class BindingPrototypeModel extends AbstractModel {
 
         public static BindingPrototypeModel newInstance() {

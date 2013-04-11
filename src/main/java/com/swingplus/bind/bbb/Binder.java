@@ -7,6 +7,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
 import org.jdesktop.beansbinding.Binding;
@@ -59,10 +60,19 @@ public class Binder<B> extends AbstractBinder<B> {
      * @param component text component
      * @param fieldName name of the field on the underlying bean
      */
-    public void bindText(JTextComponent component, String fieldName) {
+    public void bindText(final JTextComponent component, String fieldName) {
         B bean = getBean();
         Binding<B, ?, JComponent, String> binding = TextBindings.text(bean, fieldName, component);
         bindAndRegister(binding);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                String text = component.getText();
+                if (text != null && text.length() > 0) {
+                    component.setCaretPosition(component.getText().length());
+                }
+            }
+        });
     }
 
     /**
