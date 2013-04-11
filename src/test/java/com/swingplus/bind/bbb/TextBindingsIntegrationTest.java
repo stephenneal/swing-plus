@@ -16,7 +16,11 @@ import org.junit.Test;
 import com.swingplus.bind.TestBean;
 
 /**
- * Integration test for {@link TextBindings}.
+ * Tests for {@link TextBindings}.
+ * <p>
+ * This is considered and integration test because it does not test {@link TextBindings} in isolation, it tests real
+ * bindings (which are provided by BetterBeans Binding).
+ * </p>
  * 
  * @author Stephen Neal
  * @since 18/07/2011

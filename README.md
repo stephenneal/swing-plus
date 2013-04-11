@@ -9,3 +9,12 @@ Binding operations are for binding view components values, state etc to its mode
 
 
 Developed using Eclipse with Maven (m2eclipse).
+
+TODO
+This list is not complete...
+
+Binding
+- test binding to primitive types (and determine whether to support them)
+
+BusyPainter
+- add

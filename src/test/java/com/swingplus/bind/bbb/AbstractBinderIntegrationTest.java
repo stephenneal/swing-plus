@@ -22,11 +22,13 @@ import org.junit.Test;
 import org.springframework.util.ReflectionUtils;
 
 import com.swingplus.bind.TestBean;
-import com.swingplus.bind.bbb.AbstractBinder;
-import com.swingplus.bind.bbb.Binder;
 
 /**
- * Integration tests for {@link Binder}.
+ * Tests for {@link Binder}.
+ * <p>
+ * This is considered and integration test because it does not test {@link AbstractBinder} in isolation, it tests real
+ * bindings (which are provided by BetterBeans Binding).
+ * </p>
  * 
  * @author Stephen Neal
  * @since 10/04/2013

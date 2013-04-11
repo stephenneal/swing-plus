@@ -1,8 +1,11 @@
 package com.swingplus.bind.bbb;
 
-
 /**
- * Integration test for {@link DateBindings}.
+ * Tests for {@link DateBindings}.
+ * <p>
+ * This is considered and integration test because it does not test {@link AbstractBinder} in isolation, it tests real
+ * bindings (which are provided by BetterBeans Binding).
+ * </p>
  * 
  * @author Stephen Neal
  * @since 18/07/2011

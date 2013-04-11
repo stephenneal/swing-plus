@@ -31,7 +31,11 @@ import org.junit.Test;
 import com.swingplus.bind.TestBean;
 
 /**
- * Integration tests for {@link Binder}.
+ * Tests for {@link Binder}.
+ * <p>
+ * This is considered and integration test because it does not test {@link Binder} in isolation, it tests real bindings
+ * (which are provided by BetterBeans Binding).
+ * </p>
  * 
  * @author Stephen Neal
  * @since 29/07/2011

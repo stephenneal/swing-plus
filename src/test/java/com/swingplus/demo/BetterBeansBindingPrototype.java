@@ -55,20 +55,21 @@ public class BetterBeansBindingPrototype extends JPanel {
 
     private JLabel text1Label;
     private JTextField text1;
-    private JLabel text1Output;
     private JLabel text2Label;
     private JTextField text2;
     private JLabel text3Label;
     private JTextField text3;
     private Binder<BindingPrototypeModel> binder;
 
+    private JLabel text1Output;
+
     public BetterBeansBindingPrototype(BindingPrototypeModel model) {
         this.text1Label = new JLabel("Text 1");
-        this.text1 = new JTextField(15);
+        this.text1 = new JTextField();
         this.text2Label = new JLabel("Text 2");
-        this.text2 = new JTextField(15);
+        this.text2 = new JTextField();
         this.text3Label = new JLabel("Text 3");
-        this.text3 = new JTextField(15);
+        this.text3 = new JTextField();
 
         this.text1Output = new JLabel();
 
@@ -78,7 +79,7 @@ public class BetterBeansBindingPrototype extends JPanel {
         this.binder.bindText(this.text2, "duble");
         this.binder.bindText(this.text3, "date");
 
-        layoutComponentsGroup(this);
+        layoutComponentsBox(this);
     }
 
     public void release() {
@@ -90,6 +91,7 @@ public class BetterBeansBindingPrototype extends JPanel {
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
         panel1.add(this.text1Label);
         panel1.add(this.text1);
+        panel1.add(this.text1Output);
 
         JPanel panel2 = new JPanel();
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
@@ -121,16 +123,16 @@ public class BetterBeansBindingPrototype extends JPanel {
         // Create a sequential group for the horizontal axis.
         GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
 
-        // The sequential group in turn contains two parallel groups.
-        // One parallel group contains the labels, the other the text fields.
-        // Putting the labels in a parallel group along the horizontal axis
-        // positions them at the same x location.
+        // The sequential group in turn contains three parallel groups.
+        // The first parallel group contains the field labels, the second the text fields and the third the output.
+        // Putting the labels in a parallel group along the horizontal axis positions them at the same x location.
         //
         // Variable indentation is used to reinforce the level of grouping.
         hGroup.addGroup(layout.createParallelGroup().addComponent(this.text1Label).addComponent(this.text2Label)
                         .addComponent(this.text3Label));
         hGroup.addGroup(layout.createParallelGroup().addComponent(this.text1).addComponent(this.text2)
                         .addComponent(this.text3));
+        hGroup.addGroup(layout.createParallelGroup().addComponent(this.text1Output));
         layout.setHorizontalGroup(hGroup);
 
         // Create a sequential group for the vertical axis.
@@ -142,7 +144,7 @@ public class BetterBeansBindingPrototype extends JPanel {
         // the second label and text field. By using a sequential group
         // the labels and text fields are positioned vertically after one another.
         vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).addComponent(this.text1Label)
-                        .addComponent(this.text1));
+                        .addComponent(this.text1).addComponent(this.text1Output));
         vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).addComponent(this.text2Label)
                         .addComponent(this.text2));
         vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).addComponent(this.text3Label)

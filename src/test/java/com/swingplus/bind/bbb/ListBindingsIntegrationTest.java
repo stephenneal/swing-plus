@@ -28,8 +28,17 @@ import org.jdesktop.swingbinding.JTableBinding;
 import org.junit.Test;
 
 import com.swingplus.bind.TestBean;
-import com.swingplus.bind.bbb.ListBindings;
 
+/**
+ * Tests for {@link ListBindings}.
+ * <p>
+ * This is considered and integration test because it does not test {@link ListBindings} in isolation, it tests real
+ * bindings (which are provided by BetterBeans Binding).
+ * </p>
+ * 
+ * @author Stephen Neal
+ * @since 29/07/2011
+ */
 public class ListBindingsIntegrationTest {
 
     private final Logger logger = Logger.getLogger(getClass());
