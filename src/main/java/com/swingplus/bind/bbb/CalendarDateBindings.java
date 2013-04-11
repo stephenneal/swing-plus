@@ -1,4 +1,4 @@
-package com.swingplus.bind;
+package com.swingplus.bind.bbb;
 
 /**
  * Encapsulate operations that bind the value of a calendar or date component to a date field.

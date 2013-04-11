@@ -1,5 +1,6 @@
-package com.swingplus.bind;
+package com.swingplus.bind.bbb;
 
+import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import org.jdesktop.beansbinding.BeanProperty;
@@ -9,7 +10,7 @@ import org.jdesktop.beansbinding.PropertyStateListener;
 /**
  * Swing property wraps {@link Property} to ensure values for Swing component properties are set in the EDT.
  * 
- * @author steve
+ * @author Stephen Neal
  * @since 21/04/2011
  * 
  * @param <S> the type of source object that this {@code SwingProperty} operates on
@@ -25,7 +26,18 @@ class SwingProperty<S, V> extends Property<S, V> {
      * @throws IllegalArgumentException if the path is null, or contains no property names
      */
     public static final <S, V> SwingProperty<S, V> create(String path) {
-        return new SwingProperty<S, V>(null, path);
+        return new SwingProperty<S, V>(null, path, null);
+    }
+
+    /**
+     * Creates an instance of {@code SwingProperty} for the given path.
+     * 
+     * @param path the path
+     * @return an instance of {@code SwingProperty} for the given path
+     * @throws IllegalArgumentException if the path is null, or contains no property names
+     */
+    public static final <S, V> SwingProperty<S, V> create(String path, Class<?> targetType) {
+        return new SwingProperty<S, V>(null, path, targetType);
     }
 
     /**
@@ -38,16 +50,20 @@ class SwingProperty<S, V> extends Property<S, V> {
      * @throws IllegalArgumentException if the path is null, or contains no property names
      */
     public static final <S, V> SwingProperty<S, V> create(Property<S, ?> baseProperty, String path) {
-        return new SwingProperty<S, V>(baseProperty, path);
+        return new SwingProperty<S, V>(baseProperty, path, null);
     }
 
     private BeanProperty<S, V> beanProperty;
+    private String path;
+    private Class<?> targetType;
 
     /**
      * @throws IllegalArgumentException for empty or {@code null} path.
      */
-    private SwingProperty(Property<S, ?> baseProperty, String path) {
+    private SwingProperty(Property<S, ?> baseProperty, String path, Class<?> targetType) {
         this.beanProperty = BeanProperty.create(baseProperty, path);
+        this.path = path;
+        this.targetType = targetType;
     }
 
     @Override
@@ -76,7 +92,25 @@ class SwingProperty<S, V> extends Property<S, V> {
 
     @Override
     public V getValue(S source) {
-        return this.beanProperty.getValue(source);
+        V value = this.beanProperty.getValue(source);
+        // Special handling for binding a "text" property of a Swing component to a non-String field.
+        // If the target property is a String return the value as is, otherwise return null instead of empty string. The
+        // BetterBeansBinding default conversion (see org.jdesktop.beansbinding.Converter) for non-String types fails
+        // for an empty string (parsers cannot convert it to something meaningful) and therefore the target value is not
+        // updated (it retains any existing value which does not necessarily reflect the fact the component no longer
+        // has a value. By returning null in place of an empty string here the conversion is ignored and the target
+        // value is set to null.
+        //
+        // NB. it is probably preferable that this logic be in the conversion. Unfortunately the default conversion
+        // provided by BetterBeansBinding cannot be re-used (cannot be accessed outside of the package). That would mean
+        // have to write our own version of all those converters plus include handling for an empty string (either by
+        // wrapping the converters in some way or putting it into each converter) and a converter applied to every
+        // JTextComponent binding. For now this is deemed a much simpler solution.
+        if ("text".equals(this.path) && source instanceof JComponent && !String.class.equals(this.targetType)
+                        && "".equals(value)) {
+            return null;
+        }
+        return value;
     }
 
     @Override

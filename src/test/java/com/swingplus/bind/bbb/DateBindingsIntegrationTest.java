@@ -1,10 +1,10 @@
-package com.swingplus.bind;
+package com.swingplus.bind.bbb;
 
 
 /**
  * Integration test for {@link DateBindings}.
  * 
- * @author steve
+ * @author Stephen Neal
  * @since 18/07/2011
  */
 public class DateBindingsIntegrationTest {

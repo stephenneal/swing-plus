@@ -1,10 +1,7 @@
 /**
- * Copyright (C) 2011 Stephen Neal
- */
-/**
+ * Classes for demonstration/prototyping.
  * 
- * @author steve
+ * @author Stephen Neal
  * @since 09/04/2013
- * 
  */
 package com.swingplus.demo;

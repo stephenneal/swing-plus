@@ -1,23 +1,21 @@
-package com.swingplus.bind;
+package com.swingplus.bind.bbb;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -25,17 +23,17 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
 import org.jdesktop.beansbinding.Binding;
-import org.jdesktop.beansbinding.Bindings;
 import org.jdesktop.observablecollections.ObservableCollections;
 import org.jdesktop.observablecollections.ObservableList;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.util.ReflectionUtils;
+
+import com.swingplus.bind.TestBean;
 
 /**
  * Integration tests for {@link Binder}.
  * 
- * @author steve
+ * @author Stephen Neal
  * @since 29/07/2011
  */
 public class BinderIntegrationTest {
@@ -48,8 +46,11 @@ public class BinderIntegrationTest {
         this.binder = new Binder<TestBean>(bean);
     }
 
+    /**
+     * Test {@link Binder#Binder(Object)}.
+     */
     @Test
-    public void testBindingSupportImpl() {
+    public void testConstructorBean() {
         try {
             new Binder<TestBean>(null);
             fail("exception expected, bean is null");
@@ -58,15 +59,8 @@ public class BinderIntegrationTest {
         }
 
         TestBean bean = TestBean.newInstance();
-        Binder<TestBean> support = new Binder<TestBean>(bean);
-        assertEquals(bean, support.getBean());
-    }
-
-    @Test
-    public void testGetBean() {
-        TestBean bean = TestBean.newInstance();
-        Binder<TestBean> support = new Binder<TestBean>(bean);
-        assertEquals(bean, support.getBean());
+        Binder<TestBean> binder = new Binder<TestBean>(bean);
+        assertEquals(bean, binder.getBean());
     }
 
     /**
@@ -77,17 +71,22 @@ public class BinderIntegrationTest {
      * @throws InterruptedException
      */
     @Test
-    public void testBindText() throws InterruptedException, InvocationTargetException {
+    public void testBindTextJTextFieldToString() throws InterruptedException, InvocationTargetException {
         final JTextField textField = new JTextField();
 
         // Bind
-        Binding<TestBean, String, JTextComponent, String> binding = TextBindings.text(this.binder.getBean(),
-                        String.class, "string", textField);
+        Binding<TestBean, String, JComponent, String> binding = TextBindings.text(this.binder.getBean(), "string",
+                        textField);
         binding.bind();
 
         // Test
         assertEquals(null, this.binder.getBean().getString());
-        assertEquals("", textField.getText());
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals("", textField.getText());
+            }
+        });
 
         // Update the bean value
         final String value = "value";
@@ -98,7 +97,7 @@ public class BinderIntegrationTest {
                 assertEquals(value, textField.getText());
             }
         });
-        // Clear the text field
+        // Set the text field to null
         textField.setText(null);
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
@@ -125,6 +124,130 @@ public class BinderIntegrationTest {
     }
 
     /**
+     * Test {@link Binder#bindText(JComponent, String, Class<T> fieldType)}.
+     */
+    @Test
+    public void testBindTextJLabelToInteger() throws InterruptedException, InvocationTargetException {
+        final JLabel label = new JLabel();
+
+        // Bind
+        this.binder.bindText(label, "integr");
+
+        // Test
+        assertEquals(null, this.binder.getBean().getString());
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(null, label.getText());
+            }
+        });
+
+        // Update the bean value
+        final Integer value = Integer.valueOf(2);
+        this.binder.getBean().setIntegr(value);
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(value.toString(), label.getText());
+            }
+        });
+        // Set the text field to null
+        label.setText(null);
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(null, BinderIntegrationTest.this.binder.getBean().getIntegr());
+            }
+        });
+        // Update the text field with a value
+        label.setText(value.toString());
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(value, BinderIntegrationTest.this.binder.getBean().getIntegr());
+            }
+        });
+        // Clear the bean value
+        this.binder.getBean().setIntegr(null);
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(null, label.getText());
+            }
+        });
+        // Update the text field with a value
+        label.setText(value.toString());
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(value, BinderIntegrationTest.this.binder.getBean().getIntegr());
+            }
+        });
+        // Set the text field to an empty string. This will fail conversion and the previous value is retained (grrr)
+        label.setText("");
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(null, BinderIntegrationTest.this.binder.getBean().getIntegr());
+            }
+        });
+    }
+
+    /**
+     * Test {@link Binder#bindText(JComponent, String, Class<T> fieldType)}.
+     */
+    @Test
+    public void testBindTextJTextFieldToInteger() throws InterruptedException, InvocationTargetException {
+        final JTextField textField = new JTextField();
+
+        // Bind
+        this.binder.bindText(textField, "integr");
+
+        // Test
+        assertEquals(null, this.binder.getBean().getString());
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals("", textField.getText());
+            }
+        });
+
+        // Update the bean value
+        final Integer value = Integer.valueOf(2);
+        this.binder.getBean().setIntegr(value);
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(value.toString(), textField.getText());
+            }
+        });
+        // Set the text field to null
+        textField.setText(null);
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(null, BinderIntegrationTest.this.binder.getBean().getIntegr());
+            }
+        });
+        // Update the text field with a value
+        textField.setText(value.toString());
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(value, BinderIntegrationTest.this.binder.getBean().getIntegr());
+            }
+        });
+        // Clear the bean value
+        this.binder.getBean().setIntegr(null);
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals("", textField.getText());
+            }
+        });
+    }
+
+    /**
      * Test {@link Binder#bindText(JTextComponent, String, Class<T> fieldType)}. NB. If this test fails check the test
      * for the underlying binding help.
      * <p>
@@ -132,15 +255,20 @@ public class BinderIntegrationTest {
      * </p>
      */
     @Test
-    public void testBindTextToDouble() throws InterruptedException, InvocationTargetException {
+    public void testBindTextJTextFieldToDouble() throws InterruptedException, InvocationTargetException {
         final JTextField textField = new JTextField();
 
         // Bind
-        this.binder.bindText(textField, "duble", Double.class);
+        this.binder.bindText(textField, "duble");
 
         // Test
         assertEquals(null, this.binder.getBean().getString());
-        assertEquals("", textField.getText());
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertEquals("", textField.getText());
+            }
+        });
 
         // Update the bean value
         final Double value = Double.valueOf(1.0);
@@ -151,7 +279,7 @@ public class BinderIntegrationTest {
                 assertEquals(value.toString(), textField.getText());
             }
         });
-        // Clear the text field
+        // Set the text field to null
         textField.setText(null);
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
@@ -527,38 +655,4 @@ public class BinderIntegrationTest {
         });
     }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testRelease() {
-        int bindingCount = 0;
-        // this.binder.bindDate(new JDateChooser(), "date");
-        // bindingCount++;
-        this.binder.bindText(new JTextField(), "string");
-        bindingCount++;
-        this.binder.bindText(new JTextField(), "duble", Double.class);
-        bindingCount++;
-        this.binder.bindJComboBox(new JComboBox(), "stringList");
-        bindingCount += 2;
-        Map<String, String> columnMap = new HashMap<String, String>();
-        this.binder.bindJTable(new JTable(), "testBeans", columnMap);
-        bindingCount += 2;
-
-        Field releasedField = ReflectionUtils.findField(Binder.class, "released");
-        ReflectionUtils.makeAccessible(releasedField);
-        Boolean released = (Boolean) ReflectionUtils.getField(releasedField, this.binder);
-        assertFalse(released);
-
-        Field bindingsField = ReflectionUtils.findField(Binder.class, "bindings");
-        ReflectionUtils.makeAccessible(bindingsField);
-        List<Bindings> bindings = (List<Bindings>) ReflectionUtils.getField(bindingsField, this.binder);
-        assertEquals(bindingCount, bindings.size());
-
-        this.binder.release();
-
-        released = (Boolean) ReflectionUtils.getField(releasedField, this.binder);
-        assertTrue(released);
-
-        bindings = (List<Bindings>) ReflectionUtils.getField(bindingsField, this.binder);
-        assertEquals(null, bindings);
-    }
 }

@@ -8,7 +8,7 @@
  * Beans Binding is an implementation born from JSR-295 - Beans Binding, {@link http://jcp.org/en/jsr/detail?id=295}.
  * </p>
  * 
- * @author steve
+ * @author Stephen Neal
  * @since 09/04/2013
  */
-package com.swingplus.bind;
+package com.swingplus.bind.bbb;

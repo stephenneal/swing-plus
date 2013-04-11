@@ -1,4 +1,4 @@
-package com.swingplus.bind;
+package com.swingplus.bind.bbb;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -26,6 +26,9 @@ import org.jdesktop.observablecollections.ObservableList;
 import org.jdesktop.swingbinding.JComboBoxBinding;
 import org.jdesktop.swingbinding.JTableBinding;
 import org.junit.Test;
+
+import com.swingplus.bind.TestBean;
+import com.swingplus.bind.bbb.ListBindings;
 
 public class ListBindingsIntegrationTest {
 

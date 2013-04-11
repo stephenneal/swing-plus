@@ -21,6 +21,7 @@ public class TestBean {
     private transient PropertyChangeSupport propertyChangeSupport;
     private Date date;
     private Double duble;
+    private Integer integr;
     private ObservableList<String> stringList;
     private String string;
     private ObservableList<TestBean> testBeans;
@@ -48,6 +49,16 @@ public class TestBean {
         Double oldValue = this.duble;
         this.duble = newValue;
         getPropertyChangeSupport().firePropertyChange("duble", oldValue, newValue);
+    }
+
+    public Integer getIntegr() {
+        return this.integr;
+    }
+
+    public void setIntegr(Integer newValue) {
+        Integer oldValue = this.integr;
+        this.integr = newValue;
+        getPropertyChangeSupport().firePropertyChange("integr", oldValue, newValue);
     }
 
     public ObservableList<String> getStringList() {

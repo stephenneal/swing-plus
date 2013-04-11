@@ -1,4 +1,4 @@
-package com.swingplus.bind;
+package com.swingplus.bind.bbb;
 
 import java.util.List;
 import java.util.Map;
