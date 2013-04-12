@@ -2,6 +2,7 @@ package com.swingplus.busy;
 
 import java.awt.Cursor;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -30,22 +31,6 @@ public class BusyLayerService implements Releaseable {
 
     // Public API (static)
     // ----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Wrap the component with a {@link BusyUI}.
-     * 
-     * @param component
-     *            component to wrap
-     * @param ui
-     *            {@link BusyUI} layer to use
-     * @return the wrapped component
-     */
-    public static JXLayer<JComponent> wrap(JComponent component, BusyUI ui) {
-        // Use JXLayer and BusyLayerUI until we upgrade to Java 7, once we are on Java 7 we can replace them with JLayer and WaitLayerUI
-        JXLayer<JComponent> jxLayer = new JXLayer<JComponent>(component);
-        jxLayer.setUI(ui);
-        return jxLayer;
-    }
 
     /**
      * Change the {@link Painter}'s for a {@link JXLayer}. It is safe to invoke this even when the layer is locked. This operation is does nothing if UI attached the JXLayer is not
@@ -155,7 +140,9 @@ public class BusyLayerService implements Releaseable {
 
     // Instance
     // ----------------------------------------------------------------------------------------------------------------
+
     private final ExecutorService executorService;
+    private final List<JXLayer<?>> layers;
     private boolean releaseExecutor;
 
     /**
@@ -178,7 +165,7 @@ public class BusyLayerService implements Releaseable {
      * instance is released.
      */
     public BusyLayerService(ExecutorService executorService) {
-        // ExecutorService provided, do not shut it down
+        // ExecutorService provided, do not shut it down when this instance is released
         this(executorService, false);
     }
 
@@ -189,6 +176,7 @@ public class BusyLayerService implements Releaseable {
     private BusyLayerService(ExecutorService executorService, boolean releaseExecutorService) {
         super();
         this.executorService = executorService;
+        this.layers = new ArrayList<JXLayer<?>>();
         this.releaseExecutor = releaseExecutorService;
     }
 
@@ -211,7 +199,7 @@ public class BusyLayerService implements Releaseable {
      *             if an exception is thrown by {@link Callable#call()}
      */
     public <R> R call(final JComponent busyLayer, final Callable<R> task) throws Exception {
-        return synchronous(executorService, busyLayer, task);
+        return synchronous(busyLayer, task);
     }
 
     /**
@@ -223,7 +211,7 @@ public class BusyLayerService implements Releaseable {
      *            task(s) to run
      */
     public void execute(final JComponent busyLayer, final Runnable... tasks) {
-        asynchronous(executorService, busyLayer, tasks);
+        asynchronous(busyLayer, tasks);
     }
 
     /**
@@ -241,7 +229,24 @@ public class BusyLayerService implements Releaseable {
      *            task(s) to run
      */
     public void run(final JComponent busyLayer, final Runnable... tasks) {
-        synchronous(executorService, busyLayer, tasks);
+        synchronous(busyLayer, tasks);
+    }
+
+    /**
+     * Wrap the component with a {@link BusyUI}.
+     * 
+     * @param component
+     *            component to wrap
+     * @param ui
+     *            {@link BusyUI} layer to use
+     * @return the {@link JXLayer} wrapping component
+     */
+    public JXLayer<JComponent> wrap(JComponent component, BusyUI ui) {
+        // Use JXLayer and BusyLayerUI until we upgrade to Java 7, once we are on Java 7 we can replace them with JLayer and WaitLayerUI
+        JXLayer<JComponent> l = new JXLayer<JComponent>(component);
+        l.setUI(ui);
+        layers.add(l);
+        return l;
     }
 
     @Override
@@ -249,10 +254,38 @@ public class BusyLayerService implements Releaseable {
         if (releaseExecutor) {
             Executors2.shutdownNow(executorService, 5, 5, TimeUnit.SECONDS);
         }
+        Iterator<JXLayer<?>> itr = this.layers.iterator();
+        JXLayer<?> l = null;
+        while (itr.hasNext()) {
+            l = itr.next();
+            // TODO release layers? i.e. unregister layer listeners etc?
+            itr.remove();
+        }
     }
 
     // Private
     // ----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * @see #synchronous(ExecutorService, JComponent, Callable)
+     */
+    private <R> R synchronous(JComponent busyLayer, Callable<R> task) throws Exception {
+        return synchronous(executorService, busyLayer, task);
+    }
+
+    /**
+     * @see #synchronous(ExecutorService, JComponent, Runnable...)
+     */
+    private void synchronous(JComponent busyLayer, Runnable... tasks) {
+        synchronous(executorService, busyLayer, tasks);
+    }
+
+    /**
+     * @see #asynchronous(ExecutorService, JComponent, Runnable...)
+     */
+    private void asynchronous(JComponent busyLayer, Runnable... tasks) {
+        asynchronous(executorService, busyLayer, tasks);
+    }
 
     @SuppressWarnings("unchecked")
     private static void setBusy(final JComponent component, final boolean busy) {
