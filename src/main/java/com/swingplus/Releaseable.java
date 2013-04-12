@@ -13,7 +13,7 @@ package com.swingplus;
 public interface Releaseable {
 
     /**
-     * Implement this to perform operations required to release the component.
+     * Release resources that could otherwise lead to a memory leak.
      */
     void release();
 }

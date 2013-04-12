@@ -19,16 +19,17 @@ import javax.swing.SwingUtilities;
 import org.jdesktop.beansbinding.Binding;
 import org.jdesktop.observablecollections.ObservableList;
 
+import com.swingplus.ApplicationContext;
 import com.swingplus.PropertyChangeSupport2;
-import com.swingplus.ReleaseManager;
 import com.swingplus.bind.bbb.AbstractModel;
-import com.swingplus.bind.bbb.BindingManager;
+import com.swingplus.bind.bbb.BindingService;
 import com.swingplus.bind.bbb.TextBindings;
 
 @SuppressWarnings("serial")
 public class BetterBeansBindingPrototype extends JPanel {
 
     public static void main(String[] args) {
+        ApplicationContext.getInstance().setBindingService(new BindingService());
         final BetterBeansBindingPrototype prototype = createPrototype();
         final JFrame frame = new JFrame("Swing Plus Binding Demo");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -36,7 +37,7 @@ public class BetterBeansBindingPrototype extends JPanel {
             @Override
             public void windowClosed(WindowEvent e) {
                 super.windowClosed(e);
-                ReleaseManager.getSingleInstance().release();
+                ApplicationContext.getInstance().release();
             }
         });
         SwingUtilities.invokeLater(new Runnable() {
@@ -62,8 +63,6 @@ public class BetterBeansBindingPrototype extends JPanel {
         return new BetterBeansBindingPrototype(model);
     }
 
-    private BindingManager bindingManager;
-
     // Input components
     private JLabel field1Label;
     private JTextField field1;
@@ -86,7 +85,6 @@ public class BetterBeansBindingPrototype extends JPanel {
 
     public BetterBeansBindingPrototype(BindingPrototypeModel model) {
         super();
-
         // Create all the Swing components
         this.field1Label = new JLabel();
         this.field1 = new JTextField();
@@ -111,8 +109,6 @@ public class BetterBeansBindingPrototype extends JPanel {
         this.field4Output.setBorder(BorderFactory.createEtchedBorder());
 
         // Bind the Swing components to the model
-        this.bindingManager = new BindingManager();
-        ReleaseManager.getSingleInstance().add(this.bindingManager);
         bind(TextBindings.text(model, "field1Label", this.field1Label));
         bind(TextBindings.text(model, "field2Label", this.field2Label));
         bind(TextBindings.text(model, "field3Label", this.field3Label));
@@ -155,7 +151,7 @@ public class BetterBeansBindingPrototype extends JPanel {
         if (binding == null) {
             return;
         }
-        this.bindingManager.bind(binding);
+        ApplicationContext.getInstance().getBindingService().bind(binding);
     }
 
     /**

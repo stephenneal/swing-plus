@@ -7,7 +7,7 @@
  * {@link com.swingplus.bind.bbb.SwingProperty})</li>
  * <li>add to the converters included in BetterBeansBinding to provide a more complete "out of the box" binding</li>
  * <li>include easy management and releasing of bindings when no longer required (see
- * {@link com.swingplus.bind.bbb.BindingManager})</li>
+ * {@link com.swingplus.bind.bbb.BindingService})</li>
  * </p>
  * <p>
  * Binding operations are grouped by the Swing component and type of property to be bound.
