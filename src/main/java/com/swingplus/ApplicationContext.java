@@ -3,12 +3,13 @@ package com.swingplus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.swingplus.bind.bbb.BindingService;
+import com.swingbinding.bbb.BindingService;
 import com.swingplus.busy.BusyLayerService;
 
 /**
- * Component encapsulates context for an application instance and provides context operations. Most notably it contains a {@link ReleaseService} where any component in the
- * application can register itself to be released when the application exits.
+ * Component encapsulates context for an application instance and provides context operations. Most notably it contains
+ * a {@link ReleaseService} where any component in the application can register itself to be released when the
+ * application exits.
  * 
  * @author Stephen Neal
  * @since 11/04/2013
@@ -36,7 +37,7 @@ public class ApplicationContext implements Releaseable {
     // Instance
     // -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    private BindingService bindingService;
+    private ReleaseableBindingService bindingService;
     private BusyLayerService busyLayerService;
     private final ReleaseService releaseService;
 
@@ -46,29 +47,29 @@ public class ApplicationContext implements Releaseable {
     }
 
     /**
-     * Get the instance attached to this context. Throws {@link UnsupportedOperationException} if the instance is {@code null}.
+     * Get the instance attached to this context. Throws {@link UnsupportedOperationException} if the instance is
+     * {@code null}.
      * 
      * @return the instance attached to this context
-     * @throws UnsupportedOperationException
-     *             if the instance is {@code null}
+     * @throws UnsupportedOperationException if the instance is {@code null}
      */
     public BindingService getBindingService() {
-        if (bindingService == null) {
+        if (this.bindingService == null) {
             throw new UnsupportedOperationException("binding not supported here");
         }
-        return bindingService;
+        return this.bindingService;
     }
 
     /**
-     * Set the instance for this context (can be null). If it is not {@code null} it is added the list of instances to release when this context is released.
+     * Set the instance for this context (can be null). If it is not {@code null} it is added the list of instances to
+     * release when this context is released.
      * 
-     * @param bindingService
-     *            {@link BindingService} instance
+     * @param bindingService {@link BindingService} instance
      */
-    public BindingService setBindingService(BindingService bindingService) {
-        BindingService oldValue = this.bindingService;
+    public BindingService setBindingService(ReleaseableBindingService bindingService) {
+        ReleaseableBindingService oldValue = this.bindingService;
         if (oldValue != null) {
-            logger.warn("replacing the binding service, the existing one will no longer be managed here");
+            this.logger.warn("replacing the binding service, the existing one will no longer be managed here");
             getReleaseService().remove(oldValue);
         }
         this.bindingService = bindingService;
@@ -77,30 +78,30 @@ public class ApplicationContext implements Releaseable {
     }
 
     /**
-     * Get the instance attached to this context. Throws {@link UnsupportedOperationException} if the instance is {@code null}.
+     * Get the instance attached to this context. Throws {@link UnsupportedOperationException} if the instance is
+     * {@code null}.
      * 
      * @return the instance attached to this context
-     * @throws UnsupportedOperationException
-     *             if the instance is {@code null}
+     * @throws UnsupportedOperationException if the instance is {@code null}
      */
     public BusyLayerService getBusyLayerService() {
-        if (busyLayerService == null) {
+        if (this.busyLayerService == null) {
             throw new UnsupportedOperationException("binding not supported here");
         }
-        return busyLayerService;
+        return this.busyLayerService;
     }
 
     /**
-     * Set the instance for this context (can be null). If it is not {@code null} it is added the list of instances to release when this context is released.
+     * Set the instance for this context (can be null). If it is not {@code null} it is added the list of instances to
+     * release when this context is released.
      * 
-     * @param busyLayerService
-     *            {@link BusyLayerService} instance
+     * @param busyLayerService {@link BusyLayerService} instance
      * @return
      */
     public BusyLayerService setBusyLayerService(BusyLayerService busyLayerService) {
         BusyLayerService oldValue = this.busyLayerService;
         if (oldValue != null) {
-            logger.warn("replacing the busy layer service, the existing one will no longer be managed here");
+            this.logger.warn("replacing the busy layer service, the existing one will no longer be managed here");
             getReleaseService().remove(oldValue);
         }
         this.busyLayerService = busyLayerService;
@@ -114,7 +115,7 @@ public class ApplicationContext implements Releaseable {
      * @return the instance attached to this context
      */
     public ReleaseService getReleaseService() {
-        return releaseService;
+        return this.releaseService;
     }
 
     @Override
