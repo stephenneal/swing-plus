@@ -19,13 +19,14 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import org.apache.log4j.Logger;
 import org.jdesktop.beansbinding.Binding;
 import org.jdesktop.observablecollections.ObservableCollections;
 import org.jdesktop.observablecollections.ObservableList;
 import org.jdesktop.swingbinding.JComboBoxBinding;
 import org.jdesktop.swingbinding.JTableBinding;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.swingplus.bind.TestBean;
 
@@ -40,7 +41,7 @@ import com.swingplus.bind.TestBean;
  */
 public class ListBindingsFunctionalTest {
 
-    private final Logger logger = Logger.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Test for {@link ListBindings#model(Object, String, javax.swing.JComboBox)}. Verifies binding in both directions.

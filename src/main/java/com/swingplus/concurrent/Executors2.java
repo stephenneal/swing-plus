@@ -44,7 +44,7 @@ public class Executors2 {
      * 
      * </p>
      */
-    public static void shutdownNow(ExecutorService service, long firstTimeout, long secondTimeout, TimeUnit timeUnit) {
+    public static void shutdownAndAwaitTermination(ExecutorService service, long firstTimeout, long secondTimeout, TimeUnit timeUnit) {
         boolean shutdown = false;
         // Try to shutdown gracefully
         service.shutdown();

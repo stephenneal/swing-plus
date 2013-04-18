@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 
-import org.apache.commons.lang.Validate;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.ext.LockableUI;
 
@@ -19,16 +18,21 @@ import com.swingplus.busy.painter.Painter;
 import com.swingplus.busy.painter.SpinningWheelPainter;
 
 /**
- * Extension of {@link LockableUI} that allows animated painting over the wrapped component. The default paints a dim layer and spinning wheel.
+ * Extension of {@link LockableUI} that allows animated painting over the wrapped component. The default paints a dim
+ * layer and spinning wheel.
  * <p>
- * Do not use this class directly, use it through {@link BusyLayerService} which provides convenience and ensures proper synchronisation.
+ * Do not use this class directly, use it through {@link BusyLayerService} which provides convenience and ensures proper
+ * synchronisation.
  * </p>
  * <p>
- * Implemented as an extension of the JXLayer {@link LockableUI} so that it should be compatible with WaitLayerUI that will be available in Java 7.
+ * Implemented as an extension of the JXLayer {@link LockableUI} so that it should be compatible with WaitLayerUI that
+ * will be available in Java 7.
  * </p>
  * <p>
- * NB. This layer counts the number of invocations to lock and it must be unlocked as many times for the locked effect to be removed, i.e. if there are 2 requests to lock it there
- * must be 2 requests to unlock it for the locked effect to disappear. Any time a request is made to lock there should be a matching request to unlock when processing is complete.
+ * NB. This layer counts the number of invocations to lock and it must be unlocked as many times for the locked effect
+ * to be removed, i.e. if there are 2 requests to lock it there must be 2 requests to unlock it for the locked effect to
+ * disappear. Any time a request is made to lock there should be a matching request to unlock when processing is
+ * complete.
  * </p>
  */
 public class AnimatedUI extends BusyUI {
@@ -59,30 +63,34 @@ public class AnimatedUI extends BusyUI {
     }
 
     Painter[] setPainters(final Painter... painters) {
-        Validate.notEmpty(painters, "painters null or empty");
-        if (timer.isRunning()) {
+        if (painters == null || painters.length == 0) {
+            throw new IllegalArgumentException("painters null or empty");
+        }
+        if (this.timer.isRunning()) {
             // If fading in or out, let it finish first
-            // NB. it would seem sufficient to have the while statement without the curly braces and stuff in between (logging) but there was an intermittent bug where this would
+            // NB. it would seem sufficient to have the while statement without the curly braces and stuff in between
+            // (logging) but there was an intermittent bug where this would
             // get stuck when it was just a while statement.
-            while (fadeCount > 0 && fadeCount < fadeLimit) {
-                LOGGER.debug("setPainters(Painter...): wait for fade; fadeCount=" + fadeCount + "; fadeLimit=" + fadeLimit);
+            while (this.fadeCount > 0 && this.fadeCount < this.fadeLimit) {
+                this.LOGGER.debug("setPainters(Painter...): wait for fade; fadeCount=" + this.fadeCount
+                                + "; fadeLimit=" + this.fadeLimit);
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
                 }
             }
         }
-        synchronized (lock) {
-            LOGGER.debug("setPainters(Painter...): change painters");
+        synchronized (this.lock) {
+            this.LOGGER.debug("setPainters(Painter...): change painters");
             // Check timer again, if we waited for fade out it might now have stopped
-            boolean running = timer.isRunning();
+            boolean running = this.timer.isRunning();
             if (running) {
-                timer.stop();
+                this.timer.stop();
             }
             Painter[] oldPainters = AnimatedUI.this.painters;
             AnimatedUI.this.painters = painters;
             if (running) {
-                timer.start();
+                this.timer.start();
             }
             return oldPainters;
         }
@@ -91,19 +99,19 @@ public class AnimatedUI extends BusyUI {
     /** This should only ever be invoked by the superclass. */
     @Override
     protected void postLock() {
-        synchronized (lock) {
-            LOGGER.debug("postLock()");
+        synchronized (this.lock) {
+            this.LOGGER.debug("postLock()");
             super.postLock();
-            if (timer.isRunning()) {
-                LOGGER.debug("postLock(): already started");
+            if (this.timer.isRunning()) {
+                this.LOGGER.debug("postLock(): already started");
                 // Already running, if fade out has been initiated stop it and continue running.
                 // If not fading ignore the call (continue running).
-                if (fadeOut) {
-                    LOGGER.debug("postLock(): cancelling fade");
-                    fadeOut = false;
+                if (this.fadeOut) {
+                    this.LOGGER.debug("postLock(): cancelling fade");
+                    this.fadeOut = false;
                 }
             } else {
-                LOGGER.debug("postLock(): starting animation");
+                this.LOGGER.debug("postLock(): starting animation");
                 // Initiate painting.
                 this.fadeOut = false;
                 this.fadeCount = 0;
@@ -115,11 +123,11 @@ public class AnimatedUI extends BusyUI {
     /** This should only ever be invoked by the superclass. */
     @Override
     protected boolean preUnlock() {
-        synchronized (lock) {
+        synchronized (this.lock) {
             super.preUnlock();
-            LOGGER.debug("preUnlock(): start fade out");
+            this.LOGGER.debug("preUnlock(): start fade out");
             // Initiate fade out.
-            fadeOut = true;
+            this.fadeOut = true;
             // Tell the super class that unlocking will be handled here (once the timer stops and fade out is complete)
             return false;
         }
@@ -131,9 +139,9 @@ public class AnimatedUI extends BusyUI {
         // Paint the view.
         super.paintLayer(g2, c);
 
-        if (painters != null) {
-            float fade = (float) fadeCount / (float) fadeLimit;
-            for (Painter p : painters) {
+        if (this.painters != null) {
+            float fade = (float) this.fadeCount / (float) this.fadeLimit;
+            for (Painter p : this.painters) {
                 p.paintLayer(g2, c, fade);
             }
         }
@@ -146,20 +154,21 @@ public class AnimatedUI extends BusyUI {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                synchronized (lock) {
-                    if (timer.isRunning()) {
-                        if (fadeOut) {
-                            if (fadeCount == 0) {
-                                timer.stop();
-                                LOGGER.debug("preUnlock(): fade out complete and timer stopped, unlocking...");
+                synchronized (AnimatedUI.this.lock) {
+                    if (AnimatedUI.this.timer.isRunning()) {
+                        if (AnimatedUI.this.fadeOut) {
+                            if (AnimatedUI.this.fadeCount == 0) {
+                                AnimatedUI.this.timer.stop();
+                                AnimatedUI.this.LOGGER
+                                                .debug("preUnlock(): fade out complete and timer stopped, unlocking...");
                                 AnimatedUI.super.setLocked(false);
-                                LOGGER.debug("preUnlock(): unlocked");
+                                AnimatedUI.this.LOGGER.debug("preUnlock(): unlocked");
                             } else {
-                                --fadeCount;
+                                --AnimatedUI.this.fadeCount;
                             }
 
-                        } else if (fadeCount < fadeLimit) {
-                            fadeCount++;
+                        } else if (AnimatedUI.this.fadeCount < AnimatedUI.this.fadeLimit) {
+                            AnimatedUI.this.fadeCount++;
                         }
                         setDirty(true);
                     }
