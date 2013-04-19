@@ -4,9 +4,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-public class LayoutFactory {
+public class PanelFactory {
 
-    private LayoutFactory() {
+    private PanelFactory() {
     }
 
     /**
