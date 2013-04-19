@@ -111,31 +111,37 @@ public class BusyLayerService implements Releaseable {
     }
 
     /**
-     * Start a busy layer, ignored if the component is not a {@link JXLayer}. For each request to start a busy layer
-     * there should be a request to stop it once processing is complete.
+     * Request a busy layer start, if the layer is already started it simply remains busy. For each request to start a
+     * busy layer there must be a request to stop it for the layer to stop. If there is more than one request to start
+     * but only one request to stop the layer will remain busy.
      * <p>
-     * NB. Only use this when you have to, normally it is better to use {@code run}, {@code call} or {@code submit}
-     * because they take care of ensuring the call to stop is invoked at the end of processing. If you must use this
-     * then make sure you correctly invoke stop. After invoking start you should wrap the processing in a
-     * {@code try/finally} block and stop inside {@code finally} to ensure it is always invoked. If you do not the layer
-     * will not be stopped in the event of a {@link RuntimeException}.
+     * Ignored if the component is not a {@link JXLayer}.
+     * </p>
+     * <p>
+     * After invoking start you should wrap the processing in a {@code try/finally} block and make the stop request
+     * inside {@code finally} to ensure it is always invoked. If you do not the layer will not be stopped in the event
+     * of a {@link RuntimeException}.
      * </p>
      * 
      * @param busyLayer {@link JXLayer} to start, invocation is ignored if it is not a {@link JXLayer}
      */
-    public static void startBusy(JComponent busyLayer) {
+    public static void requestStart(JComponent busyLayer) {
         setBusy(busyLayer, true);
     }
 
     /**
-     * Stop a busy layer, ignored if the component is not a {@link JXLayer}.
+     * Request a busy layer stop. For each request to start a busy layer there must be a request to stop it for the
+     * layer to stop. If there were more requests to start the layer than to stop the layer will remain busy.
      * <p>
-     * Stop the busy layer. To be using in conjunction with {@link #startBusy(JComponent))}.
+     * Ignored if the component is not a {@link JXLayer}.
+     * </p>
+     * <p>
+     * Stop the busy layer. To be using in conjunction with {@link #requestStart(JComponent))}.
      * </p>
      * 
      * @param busyLayer busy layer to stop, ignored if it is not a {@link JXLayer}
      */
-    public static void stopBusy(final JComponent busyLayer) {
+    public static void requestStop(final JComponent busyLayer) {
         setBusy(busyLayer, false);
     }
 
@@ -252,10 +258,10 @@ public class BusyLayerService implements Releaseable {
             Executors2.shutdownAndAwaitTermination(this.executorService, 5, 5, TimeUnit.SECONDS);
         }
         Iterator<JXLayer<?>> itr = this.layers.iterator();
-        JXLayer<?> l = null;
+        // JXLayer<?> l = null;
         while (itr.hasNext()) {
-            l = itr.next();
             // TODO release layers? i.e. unregister layer listeners etc?
+            // l = itr.next();
             itr.remove();
         }
     }
