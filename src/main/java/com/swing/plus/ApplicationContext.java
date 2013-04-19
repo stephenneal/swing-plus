@@ -1,10 +1,10 @@
-package com.swingplus;
+package com.swing.plus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.swingbinding.bbb.BindingService;
-import com.swingplus.busy.BusyLayerService;
+import com.swing.binding.bbb.BindingService;
+import com.swing.plus.busy.BusyLayerService;
 
 /**
  * Component encapsulates context for an application instance and provides context operations. Most notably it contains

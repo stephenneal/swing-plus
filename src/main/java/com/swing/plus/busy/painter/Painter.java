@@ -1,10 +1,10 @@
-package com.swingplus.busy.painter;
+package com.swing.plus.busy.painter;
 
 import java.awt.Graphics2D;
 
 import javax.swing.JComponent;
 
-import com.swingplus.busy.AnimatedUI;
+import com.swing.plus.busy.AnimatedUI;
 
 
 /**

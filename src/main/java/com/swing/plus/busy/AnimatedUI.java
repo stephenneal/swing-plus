@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.swingplus.busy;
+package com.swing.plus.busy;
 
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -13,9 +13,9 @@ import javax.swing.Timer;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.ext.LockableUI;
 
-import com.swingplus.busy.painter.DimPainter;
-import com.swingplus.busy.painter.Painter;
-import com.swingplus.busy.painter.SpinningWheelPainter;
+import com.swing.plus.busy.painter.DimPainter;
+import com.swing.plus.busy.painter.Painter;
+import com.swing.plus.busy.painter.SpinningWheelPainter;
 
 /**
  * Extension of {@link LockableUI} that allows animated painting over the wrapped component. The default paints a dim

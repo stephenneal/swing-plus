@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2011 Stephen Neal
  */
-package com.swingplus;
+package com.swing.plus;
 
 import java.util.Arrays;
 import java.util.HashSet;

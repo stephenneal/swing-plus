@@ -1,4 +1,4 @@
-package com.swingplus.busy.painter;
+package com.swing.plus.busy.painter;
 
 import java.awt.Graphics2D;
 

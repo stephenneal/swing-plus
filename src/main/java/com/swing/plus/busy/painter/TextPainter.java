@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.swingplus.busy.painter;
+package com.swing.plus.busy.painter;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;

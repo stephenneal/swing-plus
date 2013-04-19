@@ -1,4 +1,4 @@
-package com.swingplus;
+package com.swing.plus;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;

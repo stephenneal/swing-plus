@@ -1,9 +1,9 @@
 /**
  * Copyright (C) 2011 Stephen Neal
  */
-package com.swingplus;
+package com.swing.plus;
 
-import com.swingbinding.bbb.BindingService;
+import com.swing.binding.bbb.BindingService;
 
 /**
  * {@link BindingService} that implements {@link Releaseable} for simple integration with {@link ApplicationContext}.

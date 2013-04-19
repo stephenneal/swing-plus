@@ -1,4 +1,4 @@
-package com.swingplus.demo;
+package com.swing.plus.demo;
 
 import java.awt.BorderLayout;
 

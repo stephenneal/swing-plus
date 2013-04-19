@@ -1,4 +1,4 @@
-package com.swingplus.busy;
+package com.swing.plus.busy;
 
 import java.awt.Cursor;
 import java.util.ArrayList;
@@ -18,9 +18,9 @@ import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.LayerUI;
 import org.jdesktop.jxlayer.plaf.ext.LockableUI;
 
-import com.swingplus.Releaseable;
-import com.swingplus.busy.painter.Painter;
-import com.swingplus.concurrent.Executors2;
+import com.swing.plus.Releaseable;
+import com.swing.plus.busy.painter.Painter;
+import com.swing.plus.concurrent.Executors2;
 
 /**
  * Provides a simple API to interact with a busy layer and synchronisation where required. Provides utilities in the

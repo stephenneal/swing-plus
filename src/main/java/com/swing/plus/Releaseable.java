@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2011 Stephen Neal
  */
-package com.swingplus;
+package com.swing.plus;
 
 /**
  * An interface that defines a component that can be released. This is part of a mechanism to release or clean up before

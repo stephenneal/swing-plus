@@ -1,4 +1,4 @@
-package com.swingplus;
+package com.swing.plus;
 
 import java.awt.Image;
 import java.net.URL;

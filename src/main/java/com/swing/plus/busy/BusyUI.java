@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.swingplus.busy;
+package com.swing.plus.busy;
 
 
 import org.jdesktop.jxlayer.plaf.ext.LockableUI;

@@ -1,9 +1,11 @@
-package com.swingplus;
+package com.swing.plus;
 
 import javax.swing.ImageIcon;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.swing.plus.Images;
 
 /**
  * Tests for {@link Images}
