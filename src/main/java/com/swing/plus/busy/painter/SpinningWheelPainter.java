@@ -15,7 +15,6 @@ import javax.swing.JComponent;
  * Paints a spinning wheel reminiscent of the iPhone wait indicator.
  */
 public class SpinningWheelPainter extends AbstractPainter {
-    private static final long serialVersionUID = 1L;
 
     private int angle;
 
@@ -27,7 +26,8 @@ public class SpinningWheelPainter extends AbstractPainter {
         // Paint the wait indicator.
         int strokes = 16;
         int size = Math.min(w, h) / 30;
-        // If its too small it can't be seen, set a minimum size. If the minimum size happens to be bigger than the container it will be partially visible, its is expected that
+        // If its too small it can't be seen, set a minimum size. If the minimum size happens to be bigger than the
+        // container it will be partially visible, its is expected that
         // this is a rare circumstance.
         int min = 5;
         if (size < min) {
@@ -39,11 +39,11 @@ public class SpinningWheelPainter extends AbstractPainter {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setStroke(new BasicStroke(size / 4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2.setPaint(Color.white);
-        for (int i = 0; i < angle; i++) {
+        for (int i = 0; i < this.angle; i++) {
             g2.rotate(Math.PI / (strokes / 2), cx, cy);
         }
-        if (++angle >= strokes) {
-            angle = 0;
+        if (++this.angle >= strokes) {
+            this.angle = 0;
         }
         float strokesLess1 = strokes - 1.0f;
         for (int i = 0; i < strokes; i++) {
@@ -56,7 +56,7 @@ public class SpinningWheelPainter extends AbstractPainter {
 
     @Override
     public void reset() {
-        angle = 0;
+        this.angle = 0;
     }
 
 }
