@@ -12,6 +12,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.jdesktop.beansbinding.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,13 @@ import com.swing.binding.bbb.mvc.PresentationModel;
 public class DualModePresentationModel extends PresentationModel {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(DualModePresentationModel.class);
+
+    /**
+     * Defines properties that can be bound on this model.
+     */
+    public static class Properties extends PresentationModel.Properties {
+        public static Property<DualModePresentationModel, String> MODE = create("mode");
+    }
 
     public enum ViewMode {
         DEFAULT, READ_ONLY
