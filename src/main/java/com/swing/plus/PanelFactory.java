@@ -1,5 +1,7 @@
 package com.swing.plus;
 
+import java.awt.GridLayout;
+
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -78,4 +80,33 @@ public class PanelFactory {
         return panel;
     }
 
+    /**
+     * Creates a panel with a {@link GridLayout} and adds the components.
+     * 
+     * @param rows see {@link GridLayout#GridLayout(int, int)} rows
+     * @param columns see {@link GridLayout#GridLayout(int, int)} cols
+     * @param components (optional) components to add
+     * @return a panel with a {@link GridLayout} and the components.
+     */
+    public static JPanel grid(int rows, int columns, JComponent... components) {
+        return grid(new JPanel(), rows, columns, components);
+    }
+
+    /**
+     * Sets the layout of the panel to a {@link GridLayout} and adds the components.
+     * 
+     * @param panel the panel
+     * @param rows see {@link GridLayout#GridLayout(int, int)} rows
+     * @param columns see {@link GridLayout#GridLayout(int, int)} cols
+     * @return the panel with a {@link GridLayout} and the components.
+     */
+    public static JPanel grid(JPanel panel, int rows, int columns, JComponent... components) {
+        panel.setLayout(new GridLayout(rows, columns));
+        if (components != null) {
+            for (JComponent c : components) {
+                panel.add(c);
+            }
+        }
+        return panel;
+    }
 }
