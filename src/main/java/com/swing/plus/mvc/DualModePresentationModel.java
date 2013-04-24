@@ -62,7 +62,7 @@ public class DualModePresentationModel extends PresentationModel {
         }
         ViewMode oldValue = this.mode;
         this.mode = newValue;
-        getPropertyChangeSupport().firePropertyChange("mode", oldValue, newValue);
+        firePropertyChange("mode", oldValue, newValue);
     }
 
     private class ModePropertyChangeListener implements PropertyChangeListener {
