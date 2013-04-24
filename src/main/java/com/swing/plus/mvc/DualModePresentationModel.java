@@ -85,7 +85,7 @@ public class DualModePresentationModel extends PresentationModel {
                                 LOGGER.debug("write method not found for property: " + p.getName());
                                 continue;
                             }
-                            ReadOnlyParticipant r = setter.getAnnotation(ReadOnlyParticipant.class);
+                            ReadOnlySwitch r = setter.getAnnotation(ReadOnlySwitch.class);
                             if (r != null) {
                                 boolean value = ViewMode.DEFAULT.equals(newValue);
                                 if (r.negate()) {
