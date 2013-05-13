@@ -91,15 +91,15 @@ public class DualModePresentationModel extends PresentationModel {
                                 if (r.negate()) {
                                     value = !value;
                                 }
-                                setter.invoke(DualModePresentationModel.this, value);
-                                LOGGER.info("ReadOnlyParticipant " + p.getName() + " set to " + value);
+                                 setter.invoke(DualModePresentationModel.this, value);
+                                LOGGER.info(ReadOnlySwitch.class.getSimpleName() + p.getName() + " set to " + value);
                             }
                         } catch (IllegalArgumentException e) {
-                            LOGGER.error("cannot set value for ReadOnlyParticipant: " + p.getName(), e);
+                            LOGGER.error("cannot set value for " + ReadOnlySwitch.class.getSimpleName() + ": " + p.getName(), e);
                         } catch (IllegalAccessException e) {
-                            LOGGER.error("cannot set value for ReadOnlyParticipant: " + p.getName(), e);
+                            LOGGER.error("cannot set value for " + ReadOnlySwitch.class.getSimpleName() + ": " + p.getName(), e);
                         } catch (InvocationTargetException e) {
-                            LOGGER.error("cannot set value for ReadOnlyParticipant: " + p.getName(), e);
+                            LOGGER.error("cannot set value for " + ReadOnlySwitch.class.getSimpleName() + ": " + p.getName(), e);
                         }
                     }
                 } catch (IntrospectionException e) {
