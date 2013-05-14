@@ -1,33 +1,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<groupId>swing.plus</groupId>
 	<artifactId>swing-plus</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Swing Plus</name>
-	<description>Swing library project</description>
+	<description>Swing Plus aggregation</description>
+	<packaging>pom</packaging>
+
 	<parent>
 	    <groupId>swing.plus</groupId>
 	    <artifactId>swing-plus-parent-pom</artifactId>
 	    <version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<dependencies>
-		<!-- Swing related dependencies -->
-        <dependency>
-            <groupId>swing.plus</groupId>
-            <artifactId>swingbinding</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-		<dependency>
-		    <groupId>org.swinglabs</groupId>
-		    <artifactId>jxlayer</artifactId>
-		    <version>3.0.4</version>
-		</dependency>
-        <!-- Dependencies for testing only -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>3.2.2.RELEASE</version>
-            <scope>test</scope>
-        </dependency>
-	</dependencies>
+
+    <modules>
+        <module>../swingtest</module>
+        <module>../swingutils</module>
+        <module>../swingbinding</module>
+        <module>../swingbindingextra</module>
+        <module>../swing-plus-demo</module>
+    </modules>
+
 </project>
